@@ -11,10 +11,11 @@ import java.util.List;
 public class MenuRequest {
 
     private Long id;
-    private List<MenuLabelsRequest> menuLabels;
     private Date defaultDate;
 
     private String ColorMenu ;
 
     private String NameMenu ;
+    private List<MenuLabelsRequest> menuLabels;
+
 }
