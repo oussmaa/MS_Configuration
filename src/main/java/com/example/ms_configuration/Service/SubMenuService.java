@@ -32,7 +32,21 @@ public class SubMenuService {
         SubMenu sub = convertToEntity(submenuRequest);
         subMenuRepository.save(sub);
     }
+    public void DeletSubMenu(Long Id)
+    {
+        subMenuRepository.deleteById(Id);
+    }
 
+
+    public SubmenuRequest UpdateSubById(SubmenuRequest submenuRequest)
+    {
+        SubMenu subMenu = subMenuRepository.findById(submenuRequest.getId()).orElseThrow();
+        subMenu.setIcon(submenuRequest.getIcon());
+        subMenu.setTitle(submenuRequest.getTitle());
+        subMenuRepository.save(subMenu);
+        return submenuRequest;
+
+    }
     private SubMenu convertToEntity(SubmenuRequest submenuRequest) {
         SubMenu submenuLabel = new SubMenu();
         MenuLabels menulb = menuLabelRepository.findById(submenuRequest.getIdlabelMenu()).orElseThrow();

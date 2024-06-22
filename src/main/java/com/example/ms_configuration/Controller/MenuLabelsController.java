@@ -3,8 +3,7 @@ package com.example.ms_configuration.Controller;
 import com.example.ms_configuration.Request.MenuLabelsRequest;
 import com.example.ms_configuration.Request.MenuRequest;
 import com.example.ms_configuration.Service.MenuLabelsService;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +26,7 @@ public class MenuLabelsController {
     }
 
     @GetMapping("/getmenulabelbyid/{menuId}")
-    @ApiOperation(value = "Retrieve a menu by ID", response = MenuRequest.class)
+    //@ApiOperation(value = "Retrieve a menu by ID", response = MenuRequest.class)
     public List<MenuLabelsRequest> getMenuById(@PathVariable Long menuId) {
         List<MenuLabelsRequest> menu = menuLabelsService.getMenuLabelById(menuId);
         return menu;

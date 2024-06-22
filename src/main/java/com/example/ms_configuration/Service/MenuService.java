@@ -3,16 +3,19 @@ package com.example.ms_configuration.Service;
 import com.example.ms_configuration.Entity.Menu;
 import com.example.ms_configuration.Entity.MenuLabels;
 import com.example.ms_configuration.Entity.SubMenu;
+import com.example.ms_configuration.Repository.MenuLabelRepository;
 import com.example.ms_configuration.Repository.MenuRepository;
+import com.example.ms_configuration.Repository.SubMenuRepository;
 import com.example.ms_configuration.Request.MenuLabelsRequest;
 import com.example.ms_configuration.Request.MenuRequest;
 import com.example.ms_configuration.Request.SubmenuRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +24,11 @@ public class MenuService {
     @Autowired
     private MenuRepository menuRepository;
 
+    @Autowired
+    private SubMenuRepository subMenuRepository;
+
+    @Autowired
+    private MenuLabelRepository menuLabelRepository;
     public List<MenuRequest> getAllMenus() {
         List<Menu> menus = menuRepository.findAll();
 
@@ -112,10 +120,60 @@ public class MenuService {
         submenuRequest.setPathname(subMenu.getPathname());
         return submenuRequest;
     }
+public void deleteListMenulabel(List<MenuLabels> list)
+{
+ for(int i=0; i< list.size();i++)
+ {
+     List<SubMenu> sub = subMenuRepository.findSubMenuByIdLabel(list.get(i).getId()) ;
+if (sub!=null)
+{
+    deleteListSubmenu(sub);
+}
+     menuLabelRepository.deleteById(list.get(i).getId());
+ }
 
-    public void DeletMenu(Long Id)
+
+}
+public void deleteListSubmenu(List<SubMenu> list)
+{
+    for(int i=0; i< list.size();i++)
     {
-        menuRepository.deleteById(Id);
+        List<SubMenu> sub = subMenuRepository.findSubMenuByIdLabel(list.get(i).getId()) ;
+
+        menuLabelRepository.deleteById(list.get(i).getId());
+    }
+
+
+}
+    public String DeletMenu(Long Id)
+    {
+        long idmenu=0;
+        try {
+
+           Optional<Menu> menu =   menuRepository.findById(Id);
+            idmenu = menu.get().getId();
+          if (menu.isPresent())
+          {
+              menuRepository.deleteById(Id);
+
+              List<MenuLabels> menuLabels =   menuLabelRepository.findMenuLabelsByIdMenu(idmenu);
+
+              if(menuLabels!=null)
+              {
+                  deleteListMenulabel(menuLabels);
+              }
+
+           }
+
+
+
+
+        }catch (Exception e)
+        {
+            return e.getMessage().toString();
+        }
+
+        return null;
     }
 
 
